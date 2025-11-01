@@ -160,6 +160,28 @@ func main() {
 		fmt.Printf("  - %s (by %s)\n", result["title"], result["author"])
 	}
 
+	// Search with NOT match query (exclude documents)
+	notQuery := opensearch.NotMatchQuery("category", "tutorial")
+	notResults, err := client.SearchDocuments(ctx, indexName, notQuery)
+	if err != nil {
+		log.Fatalf("Failed to search with NOT match query: %v", err)
+	}
+	fmt.Printf("✓ Found %d documents that are NOT tutorials\n", len(notResults))
+	for _, result := range notResults {
+		fmt.Printf("  - %s (category: %s)\n", result["title"], result["category"])
+	}
+
+	// Search with NOT term query (exclude exact match)
+	notTermQuery := opensearch.NotTermQuery("published", false)
+	notTermResults, err := client.SearchDocuments(ctx, indexName, notTermQuery)
+	if err != nil {
+		log.Fatalf("Failed to search with NOT term query: %v", err)
+	}
+	fmt.Printf("✓ Found %d published documents (excluding unpublished)\n", len(notTermResults))
+	for _, result := range notTermResults {
+		fmt.Printf("  - %s (published: %v)\n", result["title"], result["published"])
+	}
+
 	// Search with range query
 	rangeQuery := opensearch.RangeQuery("views", 200, 400)
 	rangeResults, err := client.SearchDocuments(ctx, indexName, rangeQuery)
@@ -222,4 +244,3 @@ func main() {
 
 	fmt.Println("\n✓ Demo completed successfully!")
 }
-

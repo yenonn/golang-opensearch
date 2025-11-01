@@ -38,9 +38,9 @@ type Hit struct {
 
 // BulkResponse represents the response from a bulk request
 type BulkResponse struct {
-	Took   int                      `json:"took"`
-	Errors bool                     `json:"errors"`
-	Items  []map[string]BulkItem    `json:"items"`
+	Took   int                   `json:"took"`
+	Errors bool                  `json:"errors"`
+	Items  []map[string]BulkItem `json:"items"`
 }
 
 // BulkItem represents a single item in a bulk response
@@ -119,12 +119,67 @@ func MatchQuery(field, value string) map[string]interface{} {
 	}
 }
 
+// NotMatchQuery creates a bool query that excludes documents matching the specified field and value
+func NotMatchQuery(field, value string) map[string]interface{} {
+	return map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must_not": []map[string]interface{}{
+					{
+						"match": map[string]interface{}{
+							field: value,
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+// MatchMapQuery creates a bool query with must clause matching all field-value pairs in the map
+func MatchMapQuery(fieldValues map[string]interface{}) map[string]interface{} {
+	mustClauses := make([]map[string]interface{}, 0, len(fieldValues))
+
+	for field, value := range fieldValues {
+		mustClauses = append(mustClauses, map[string]interface{}{
+			"match": map[string]interface{}{
+				field: value,
+			},
+		})
+	}
+
+	return map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must": mustClauses,
+			},
+		},
+	}
+}
+
 // TermQuery creates a term query for exact matching
 func TermQuery(field string, value interface{}) map[string]interface{} {
 	return map[string]interface{}{
 		"query": map[string]interface{}{
 			"term": map[string]interface{}{
 				field: value,
+			},
+		},
+	}
+}
+
+// NotTermQuery creates a bool query that excludes documents with exact field value match
+func NotTermQuery(field string, value interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must_not": []map[string]interface{}{
+					{
+						"term": map[string]interface{}{
+							field: value,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -193,3 +248,4 @@ func WithSort(query map[string]interface{}, field, order string) map[string]inte
 	}
 	return query
 }
+
