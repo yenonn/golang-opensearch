@@ -157,6 +157,27 @@ func MatchMapQuery(fieldValues map[string]interface{}) map[string]interface{} {
 	}
 }
 
+// NotMatchMapQuery creates a bool query with must_not clause excluding all field-value pairs in the map
+func NotMatchMapQuery(fieldValues map[string]interface{}) map[string]interface{} {
+	mustNotClauses := make([]map[string]interface{}, 0, len(fieldValues))
+
+	for field, value := range fieldValues {
+		mustNotClauses = append(mustNotClauses, map[string]interface{}{
+			"match": map[string]interface{}{
+				field: value,
+			},
+		})
+	}
+
+	return map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must_not": mustNotClauses,
+			},
+		},
+	}
+}
+
 // TermQuery creates a term query for exact matching
 func TermQuery(field string, value interface{}) map[string]interface{} {
 	return map[string]interface{}{
@@ -248,4 +269,3 @@ func WithSort(query map[string]interface{}, field, order string) map[string]inte
 	}
 	return query
 }
-
