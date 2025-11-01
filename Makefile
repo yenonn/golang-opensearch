@@ -14,12 +14,12 @@ help:
 start:
 	minikube start --profile $(PROFILE_NAME)
 	@echo "Deploying OpenSearch..."
-	kubectl --context $(PROFILE_NAME) apply -f opensearch-deployment.yaml
+	kubectl --context $(PROFILE_NAME) apply -f build/opensearch-deployment.yaml
 	@echo "Waiting for OpenSearch to be ready..."
 	kubectl --context $(PROFILE_NAME) wait --for=condition=available --timeout=300s deployment/opensearch
 	@echo "OpenSearch is ready!"
 	@echo "Deploying OpenSearch Dashboards..."
-	kubectl --context $(PROFILE_NAME) apply -f opensearch-dashboard.yaml
+	kubectl --context $(PROFILE_NAME) apply -f build/opensearch-dashboard.yaml
 	@echo "Waiting for OpenSearch Dashboards to be ready..."
 	kubectl --context $(PROFILE_NAME) wait --for=condition=available --timeout=300s deployment/opensearch-dashboards
 	@echo ""
@@ -29,16 +29,16 @@ start:
 	@echo ""
 
 deploy-opensearch:
-	kubectl --context $(PROFILE_NAME) apply -f opensearch-deployment.yaml
+	kubectl --context $(PROFILE_NAME) apply -f build/opensearch-deployment.yaml
 
 deploy-dashboard:
-	kubectl --context $(PROFILE_NAME) apply -f opensearch-dashboard.yaml
+	kubectl --context $(PROFILE_NAME) apply -f build/opensearch-dashboard.yaml
 
 stop:
 	@echo "Stopping OpenSearch Dashboards..."
-	-kubectl --context $(PROFILE_NAME) delete -f opensearch-dashboard.yaml
+	-kubectl --context $(PROFILE_NAME) delete -f build/opensearch-dashboard.yaml
 	@echo "Stopping OpenSearch deployment..."
-	-kubectl --context $(PROFILE_NAME) delete -f opensearch-deployment.yaml
+	-kubectl --context $(PROFILE_NAME) delete -f build/opensearch-deployment.yaml
 	@echo "Stopping minikube cluster..."
 	minikube stop --profile $(PROFILE_NAME)
 
