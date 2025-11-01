@@ -182,6 +182,34 @@ func main() {
 		fmt.Printf("  - %s (published: %v)\n", result["title"], result["published"])
 	}
 
+	// Search with MatchMapQuery (match multiple fields)
+	matchMapQuery := opensearch.MatchMapQuery(map[string]interface{}{
+		"category": "tutorial",
+		"author":   "John Doe",
+	})
+	matchMapResults, err := client.SearchDocuments(ctx, indexName, matchMapQuery)
+	if err != nil {
+		log.Fatalf("Failed to search with MatchMapQuery: %v", err)
+	}
+	fmt.Printf("✓ Found %d documents matching both category='tutorial' AND author='John Doe'\n", len(matchMapResults))
+	for _, result := range matchMapResults {
+		fmt.Printf("  - %s (author: %s, category: %s)\n", result["title"], result["author"], result["category"])
+	}
+
+	// Search with NotMatchMapQuery (exclude documents matching multiple fields)
+	notMatchMapQuery := opensearch.NotMatchMapQuery(map[string]interface{}{
+		"category": "tutorial",
+		"author":   "Jane Smith",
+	})
+	notMatchMapResults, err := client.SearchDocuments(ctx, indexName, notMatchMapQuery)
+	if err != nil {
+		log.Fatalf("Failed to search with NotMatchMapQuery: %v", err)
+	}
+	fmt.Printf("✓ Found %d documents NOT matching category='tutorial' AND NOT matching author='Jane Smith'\n", len(notMatchMapResults))
+	for _, result := range notMatchMapResults {
+		fmt.Printf("  - %s (author: %s, category: %s)\n", result["title"], result["author"], result["category"])
+	}
+
 	// Search with range query
 	rangeQuery := opensearch.RangeQuery("views", 200, 400)
 	rangeResults, err := client.SearchDocuments(ctx, indexName, rangeQuery)
