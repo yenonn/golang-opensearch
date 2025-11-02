@@ -13,7 +13,10 @@ func TestNewClient(t *testing.T) {
 		name      string
 		config    Config
 		wantError bool
-		errorMsg  string
+	# github.com/yenonn/go-opensearch
+./main.go:130:2: fmt.Println arg list ends with redundant newline
+FAIL    github.com/yenonn/go-opensearch [build failed]
+	errorMsg  string
 	}{
 		{
 			name: "Valid config with single address",

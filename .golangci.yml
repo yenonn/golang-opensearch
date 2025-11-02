@@ -1,0 +1,47 @@
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck      # Checks for unchecked errors
+    - gosimple      # Suggests code simplifications
+    - govet         # Reports suspicious constructs
+    - ineffassign   # Detects ineffectual assignments
+    - staticcheck   # Advanced Go linter
+    - unused        # Checks for unused code
+    - gofmt         # Checks formatting
+    - goimports     # Checks import formatting
+    - revive        # General purpose linter
+    - misspell      # Checks for spelling mistakes
+    - gocritic      # Comprehensive linter with many checks
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable-all: true
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+
+  goimports:
+    local-prefixes: github.com/yenonn/golang-opensearch
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gocritic

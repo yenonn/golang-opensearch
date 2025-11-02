@@ -1,4 +1,4 @@
-.PHONY: start stop delete status help deploy-opensearch deploy-dashboard run build get-minikube-ip test clean port-forward tunnel
+.PHONY: start stop delete status help deploy-opensearch deploy-dashboard run build get-minikube-ip test clean port-forward tunnel lint fmt fmt-check ci
 
 PROFILE_NAME := my-elasticsearch-cluster
 BINARY_NAME := opensearch-app
@@ -20,6 +20,12 @@ help:
 	@echo "  build             - Build the application binary"
 	@echo "  test              - Run tests"
 	@echo "  clean             - Remove build artifacts"
+	@echo ""
+	@echo "Code Quality:"
+	@echo "  lint              - Run golangci-lint"
+	@echo "  fmt               - Format code with gofmt"
+	@echo "  fmt-check         - Check if code is formatted"
+	@echo "  ci                - Run all CI checks (test, lint, format)"
 	@echo ""
 	@echo "Utilities:"
 	@echo "  get-minikube-ip   - Get the minikube IP address"
