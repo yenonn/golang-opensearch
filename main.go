@@ -127,7 +127,7 @@ func main() {
 	if err := client.BulkCreate(ctx, indexName, bulkDocs); err != nil {
 		log.Fatalf("Failed to bulk create documents: %v", err)
 	}
-	fmt.Println("✓ Bulk created 2 documents\n")
+	fmt.Println("✓ Bulk created 2 documents")
 
 	// Small delay to ensure indexing is complete
 	time.Sleep(1 * time.Second)
